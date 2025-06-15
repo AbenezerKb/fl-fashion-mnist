@@ -9,6 +9,8 @@ from fl_fashion_mnist.task import Net, get_weights, set_weights, test, transform
 from datasets import load_dataset
 from torch.utils.data import DataLoader
 
+import json
+
 
 def get_evaluate(testloader, device):
 
@@ -23,6 +25,14 @@ def get_evaluate(testloader, device):
     
     return evaluate
         
+def handle_fit_metrics(metrics: List[Tuple[int, Metrics]]) -> Metrics:
+    values = []
+    for _, m in metrics:
+        metrics = m["metrics"]
+        metrics_json = json.loads(metrics)
+        values.append(metrics_json["m1"])
+    
+    return {"max m1": max(values) if values else 0.0}
 
 def weighted_average(metrics: List[Tuple[int, Metrics]]) -> Metrics:
     accuracies = [num_examples * metrics["accuracy"] for num_examples, metrics in metrics]
@@ -58,6 +68,7 @@ def server_fn(context: Context):
         min_available_clients=2,
         initial_parameters=parameters,
         evaluate_metrics_aggregation_fn=weighted_average,
+        fit_metrics_aggregation_fn=handle_fit_metrics,
         on_fit_config_fn=on_fit_config,
         evaluate_fn=get_evaluate(testloader, device="cpu"),
     )

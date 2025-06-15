@@ -2,9 +2,13 @@
 
 import torch
 
+
+from random import random
 from flwr.client import ClientApp, NumPyClient
 from flwr.common import Context
 from fl_fashion_mnist.task import Net, get_weights, load_data, set_weights, test, train
+
+import json
 
 
 # Define Flower Client and client_fn
@@ -26,10 +30,12 @@ class FlowerClient(NumPyClient):
             self.local_epochs,
             self.device,
         )
+        complex_metrics = {"m1": random(), "m2": random(), "m3": random()}
         return (
             get_weights(self.net),
             len(self.trainloader.dataset),
-            {"train_loss": train_loss},
+            {"train_loss": train_loss, "metrics": json.dumps(complex_metrics)},
+
         )
 
     def evaluate(self, parameters, config):
