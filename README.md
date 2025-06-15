@@ -1,4 +1,4 @@
-# fl-fashion_mnist: A Flower / PyTorch app
+# fl-FashionMNIST: A Flower / PyTorch app
 
 ## Install dependencies and project
 
