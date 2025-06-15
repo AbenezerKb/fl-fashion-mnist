@@ -8,6 +8,7 @@ from flwr.server.strategy import FedAvg
 from fl_fashion_mnist.task import Net, get_weights, set_weights, test, transform_data
 from datasets import load_dataset
 from torch.utils.data import DataLoader
+from fl_fashion_mnist.average_strategy import CustomeAverageStrategy
 
 import json
 
@@ -62,7 +63,7 @@ def server_fn(context: Context):
     testloader = DataLoader(testset.with_transform(transform_data()), batch_size=32, shuffle=False)
 
     # Define strategy
-    strategy = FedAvg(
+    strategy = CustomeAverageStrategy(
         fraction_fit=fraction_fit,
         fraction_evaluate=1.0,
         min_available_clients=2,

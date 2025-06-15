@@ -12,6 +12,7 @@ dependencies = [
     "flwr-datasets[vision]>=0.5.0",
     "torch>=2.6.1",
     "torchvision==0.22.1",
+    "wandb",
 ]
 
 [tool.hatch.build.targets.wheel]
